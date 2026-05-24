@@ -697,6 +697,106 @@
     // Combine in correct order
     this.value = digits1 + letter + digits2;
   });
+  <!-- استيراد مكتبة Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+  // ⚠️ ضع هنا بيانات مشروعك من Supabase > Settings > API
+  const SUPABASE_URL = 'https://xxxxxx.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...';
+  
+  const { createClient } = supabase;
+  const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // بيانات الأدمن الافتراضية (من README)
+  const ADMIN_CREDENTIALS = {
+    '23f24545': '1111', '23f24343': '2222', '23f24557': '3333',
+    '23f24261': '4444', '12a34567': '5555'
+  };
+
+  // 1. إرسال التقرير
+  document.getElementById('reportForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const payload = {
+      id: crypto.randomUUID(),
+      college_id: form.college_id.value,
+      building_name: form.building.value,
+      service: form.service.value,
+      root_cause: form.root_cause.value,
+      details: form.details.value,
+      type: form.type.value, // complaint أو suggestion
+      status: 'New',
+      priority: 'Low'
+    };
+
+    const { error } = await sb.from('mec_reports').insert(payload);
+    if (error) { alert('❌ حدث خطأ: ' + error.message); return; }
+    
+    alert('✅ تم إرسال التقرير بنجاح!');
+    form.reset();
+    loadDashboard(); // تحديث الداشبورد تلقائياً
+  });
+
+  // 2. جلب البيانات وعرضها في الداشبورد
+  async function loadDashboard() {
+    const { data, error } = await sb.from('mec_reports').select('*').order('created_at', { ascending: false });
+    if (error) { console.error(error); return; }
+
+    const table = document.getElementById('reportsTable');
+    if (!table) return;
+    
+    // حساب الإحصائيات
+    document.getElementById('totalReports').textContent = data.length;
+    document.getElementById('resolvedCount').textContent = data.filter(r => r.status === 'Resolved').length;
+    document.getElementById('pendingCount').textContent = data.filter(r => r.status !== 'Resolved').length;
+    document.getElementById('suggestionsCount').textContent = data.filter(r => r.type === 'suggestion').length;
+
+    // تعبئة الجدول
+    table.innerHTML = data.map(row => `
+      <tr>
+        <td>${row.id.slice(0,8)}...</td>
+        <td>${row.college_id}</td>
+        <td>${row.building_name}</td>
+        <td>${row.type === 'complaint' ? '📝 شكوى' : '💡 مقترح'}</td>
+        <td><span class="badge ${row.status.toLowerCase().replace(' ','-')}">${row.status}</span></td>
+        <td><button onclick="updateStatus('${row.id}')">تحديث الحالة</button></td>
+      </tr>
+    `).join('');
+  }
+
+  // 3. تحديث حالة التقرير (للأدمن)
+  window.updateStatus = async (id) => {
+    const newStatus = prompt('أدخل الحالة الجديدة (New, In Progress, Resolved):');
+    if (!['New', 'In Progress', 'Resolved'].includes(newStatus)) return alert('حالة غير صحيحة');
+    
+    const { error } = await sb.from('mec_reports').update({ status: newStatus }).eq('id', id);
+    if (error) return alert('❌ ' + error.message);
+    loadDashboard();
+  };
+
+  // 4. تسجيل دخول الأدمن (بسيط)
+  document.getElementById('adminLoginForm')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const id = e.target.studentId.value;
+    const pin = e.target.pin.value;
+    if (ADMIN_CREDENTIALS[id] === pin) {
+      alert('✅ تم الدخول كمسؤول');
+      document.getElementById('adminPanel').style.display = 'block';
+      document.getElementById('studentForm').style.display = 'none';
+      loadDashboard();
+    } else {
+      alert('❌ بيانات خاطئة');
+    }
+  });
+
+  // تحميل البيانات عند فتح الصفحة
+  document.addEventListener('DOMContentLoaded', () => {
+    // إظهار/إخفاء الأقسام حسب الدور
+    document.getElementById('studentForm').style.display = 'block';
+    document.getElementById('adminPanel').style.display = 'none';
+  });
 </script>
+  
 </body>
 </html>
