@@ -3,205 +3,120 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MEC Student Voice Platform</title>
+  <title>MEC Student Voice</title>
   <style>
-    :root { --primary: #1a56db; --bg: #f8fafc; --card: #fff; --text: #1e293b; }
-    body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; line-height: 1.5; }
-    .container { max-width: 900px; margin: 0 auto; }
-    .card { background: var(--card); border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px; }
-    h1, h2 { margin-top: 0; color: var(--primary); }
-    input, select, textarea { width: 100%; padding: 10px; margin: 6px 0 15px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; }
-    button { background: var(--primary); color: #fff; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
-    button:hover { opacity: 0.9; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 15px; }
-    .stat { background: #eef2ff; padding: 10px; border-radius: 8px; text-align: center; font-size: 14px; }
-    .stat span { display: block; font-size: 24px; font-weight: bold; color: var(--primary); }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th, td { padding: 10px; border-bottom: 1px solid #e2e8f0; text-align: right; }
-    .badge { padding: 4px 8px; border-radius: 20px; font-size: 12px; background: #dbeafe; color: #1e40af; }
-    .hidden { display: none; }
-    .nav { display: flex; justify-content: space-between; margin-bottom: 20px; }
-    .nav a { text-decoration: none; color: var(--primary); cursor: pointer; padding: 8px 12px; }
+    :root{--p:#1a56db;--bg:#f8fafc;--card:#fff;--t:#1e293b}
+    body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--t);margin:0;padding:20px;line-height:1.6}
+    .wrap{max-width:900px;margin:auto}
+    .card{background:var(--card);border-radius:12px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,.1);margin-bottom:20px}
+    h2{color:var(--p);margin-top:0}
+    input,select,textarea{width:100%;padding:10px;margin:6px 0 15px;border:1px solid #cbd5e1;border-radius:8px;box-sizing:border-box}
+    button{background:var(--p);color:#fff;border:none;padding:12px;border-radius:8px;cursor:pointer;font-weight:600}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:15px}
+    .stat{background:#eef2ff;padding:10px;border-radius:8px;text-align:center}
+    .stat span{font-size:24px;font-weight:700;color:var(--p)}
+    table{width:100%;border-collapse:collapse;margin-top:10px}
+    th,td{padding:10px;border-bottom:1px solid #e2e8f0;text-align:right}
+    .hidden{display:none}
+    .nav{display:flex;justify-content:space-between;margin-bottom:20px}
+    .nav a{text-decoration:none;color:var(--p);cursor:pointer;padding:8px}
   </style>
 </head>
 <body>
-<div class="container">
-  <div class="nav">
-    <h2>🎓 MEC Student Voice</h2>
-    <div>
-      <a onclick="showSection('student')">👤 بوابة الطالب</a>
-      <a onclick="showSection('admin-login')">📊 لوحة الأدمن</a>
-    </div>
-  </div>
+<div class="wrap">
+  <div class="nav"><h2>🎓 MEC Voice</h2><div><a onclick="show('student')">👤 طالب</a> | <a onclick="show('admin-login')">📊 أدمن</a></div></div>
 
-  <!-- نموذج الطالب -->
-  <div id="studentSection" class="card">
-    <h2>📝 إرسال شكوى أو مقترح</h2>
+  <div id="sec-student" class="card">
+    <h2>📝 إرسال شكوى / مقترح</h2>
     <form id="reportForm">
-      <label>College ID *</label>
-      <input type="text" name="college_id" placeholder="مثال: 23f24545" required>
-      
-      <label>Building Name *</label>
-      <select name="building" required>
-        <option value="">اختر المبنى</option>
-        <option value="IBR">IBR</option><option value="IBK">IBK</option>
-        <option value="AKZ">AKZ</option><option value="AKH">AKH</option>
-        <option value="STUDENT HUB">STUDENT HUB</option><option value="Other">أخرى</option>
-      </select>
-
-      <label>Service Type *</label>
-      <select name="service" required>
-        <option value="">اختر الخدمة</option>
-        <option value="Academic Affairs">Academic Affairs</option>
-        <option value="IT Support">IT Support</option>
-        <option value="Facilities">Facilities</option>
-        <option value="Student Activities">Student Activities</option>
-        <option value="Finance">Finance</option><option value="Library">Library</option>
-      </select>
-
-      <label>Root Cause *</label>
-      <select name="root_cause" required>
-        <option value="">اختر السبب</option>
-        <option value="Technical">Technical Issue</option>
-        <option value="Parking">Parking</option>
-        <option value="Session">Session</option>
-        <option value="Other">Other</option>
-      </select>
-
-      <label>Details *</label>
-      <textarea name="details" rows="4" required placeholder="اشرح التفاصيل بوضوح..."></textarea>
-
-      <label>Type *</label>
-      <select name="type" required>
-        <option value="complaint">📝 شكوى</option>
-        <option value="suggestion">💡 مقترح</option>
-      </select>
-
-      <button type="submit">📤 إرسال التقرير</button>
+      <input type="text" name="college_id" placeholder="College ID (e.g., 23f24545)" required>
+      <select name="building" required><option value="">المبنى</option><option value="IBR">IBR</option><option value="IBK">IBK</option><option value="AKZ">AKZ</option><option value="STUDENT HUB">STUDENT HUB</option></select>
+      <select name="service" required><option value="">الخدمة</option><option value="Academic Affairs">Academic Affairs</option><option value="IT Support">IT Support</option><option value="Facilities">Facilities</option></select>
+      <select name="root_cause" required><option value="">السبب</option><option value="Technical">Technical</option><option value="Parking">Parking</option><option value="Session">Session</option></select>
+      <textarea name="details" rows="3" placeholder="التفاصيل..." required></textarea>
+      <select name="type" required><option value="complaint">📝 شكوى</option><option value="suggestion">💡 مقترح</option></select>
+      <button type="submit">📤 إرسال</button>
     </form>
   </div>
 
-  <!-- تسجيل دخول الأدمن -->
-  <div id="adminLoginSection" class="card hidden">
-    <h2>🔐 دخول المسؤولين</h2>
-    <form id="adminLoginForm">
-      <label>Student ID</label>
-      <input type="text" id="adminId" placeholder="مثال: 23f24545" required>
-      <label>4-Digit PIN</label>
-      <input type="password" id="adminPin" maxlength="4" placeholder="مثال: 1111" required>
-      <button type="submit">✅ تسجيل الدخول</button>
+  <div id="sec-admin-login" class="card hidden">
+    <h2>🔐 دخول المسؤول</h2>
+    <form id="loginForm">
+      <input type="text" id="aid" placeholder="Student ID" required>
+      <input type="password" id="pin" maxlength="4" placeholder="4-Digit PIN" required>
+      <button type="submit">✅ دخول</button>
     </form>
   </div>
 
-  <!-- لوحة تحكم الأدمن -->
-  <div id="adminSection" class="card hidden">
+  <div id="sec-admin" class="card hidden">
     <h2>📊 Dashboard</h2>
     <div class="grid">
-      <div class="stat"><span id="totalReports">0</span>Total</div>
-      <div class="stat"><span id="resolvedCount">0</span>Resolved</div>
-      <div class="stat"><span id="pendingCount">0</span>Pending</div>
-      <div class="stat"><span id="suggestionsCount">0</span>Suggestions</div>
+      <div class="stat"><span id="tot">0</span>الكل</div>
+      <div class="stat"><span id="res">0</span>محلول</div>
+      <div class="stat"><span id="pen">0</span>معلق</div>
+      <div class="stat"><span id="sug">0</span>مقترح</div>
     </div>
-    <button onclick="loadDashboard()">🔄 تحديث البيانات</button>
-    <table>
-      <thead><tr><th>ID</th><th>College ID</th><th>Building</th><th>Type</th><th>Status</th><th>إجراء</th></tr></thead>
-      <tbody id="reportsTable"><tr><td colspan="6">لا توجد بيانات بعد...</td></tr></tbody>
-    </table>
+    <button onclick="load()">🔄 تحديث</button>
+    <table><thead><tr><th>ID</th><th>College ID</th><th>المبنى</th><th>النوع</th><th>الحالة</th><th>إجراء</th></tr></thead>
+    <tbody id="tbl"><tr><td colspan="6">لا توجد بيانات</td></tr></tbody></table>
   </div>
 </div>
 
-<!-- Supabase SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  // 🔑 ضع هنا بيانات مشروعك من Supabase > Project Settings > API
-  const SUPABASE_URL = 'https://YOUR_PROJECT_ID.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...';
-  
-  const { createClient } = supabase;
-  const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  // 🔑 ضع بيانات مشروعك هنا
+  const URL = 'https://YOUR_PROJECT_ID.supabase.co';
+  const KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...';
+  const {createClient} = supabase;
+  const db = createClient(URL, KEY);
+  const ADMINS = {'23f24545':'1111','23f24343':'2222','23f24557':'3333','23f24261':'4444','12a34567':'5555'};
 
-  const ADMIN_CREDENTIALS = {
-    '23f24545': '1111', '23f24343': '2222', '23f24557': '3333',
-    '23f24261': '4444', '12a34567': '5555'
-  };
-
-  function showSection(role) {
-    document.getElementById('studentSection').classList.toggle('hidden', role !== 'student');
-    document.getElementById('adminLoginSection').classList.toggle('hidden', role !== 'admin-login');
-    document.getElementById('adminSection').classList.add('hidden');
+  function show(v){
+    document.getElementById('sec-student').classList.toggle('hidden', v!=='student');
+    document.getElementById('sec-admin-login').classList.toggle('hidden', v!=='admin-login');
+    document.getElementById('sec-admin').classList.add('hidden');
   }
 
-  // 1. إرسال التقرير
-  document.getElementById('reportForm').addEventListener('submit', async (e) => {
+  document.getElementById('reportForm').onsubmit = async e => {
     e.preventDefault();
-    const form = e.target;
-    const payload = {
-      id: crypto.randomUUID(),
-      college_id: form.college_id.value,
-      building_name: form.building.value,
-      service: form.service.value,
-      root_cause: form.root_cause.value,
-      details: form.details.value,
-      type: form.type.value,
-      status: 'New',
-      priority: 'Low'
-    };
-
-    const { error } = await db.from('mec_reports').insert(payload);
-    if (error) return alert('❌ خطأ: ' + error.message);
-    
-    alert('✅ تم الإرسال بنجاح!');
-    form.reset();
-  });
-
-  // 2. تسجيل دخول الأدمن
-  document.getElementById('adminLoginForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const id = document.getElementById('adminId').value;
-    const pin = document.getElementById('adminPin').value;
-    
-    if (ADMIN_CREDENTIALS[id] === pin) {
-      document.getElementById('adminLoginSection').classList.add('hidden');
-      document.getElementById('adminSection').classList.remove('hidden');
-      loadDashboard();
-    } else {
-      alert('❌ بيانات الدخول غير صحيحة');
-    }
-  });
-
-  // 3. جلب وعرض البيانات
-  window.loadDashboard = async () => {
-    const { data, error } = await db.from('mec_reports').select('*').order('created_at', { ascending: false });
-    if (error) return console.error(error);
-
-    document.getElementById('totalReports').textContent = data.length;
-    document.getElementById('resolvedCount').textContent = data.filter(r => r.status === 'Resolved').length;
-    document.getElementById('pendingCount').textContent = data.filter(r => r.status !== 'Resolved').length;
-    document.getElementById('suggestionsCount').textContent = data.filter(r => r.type === 'suggestion').length;
-
-    const tbody = document.getElementById('reportsTable');
-    if (data.length === 0) { tbody.innerHTML = '<tr><td colspan="6">لا توجد بيانات</td></tr>'; return; }
-
-    tbody.innerHTML = data.map(row => `
-      <tr>
-        <td>${row.id.slice(0,8)}...</td>
-        <td>${row.college_id}</td>
-        <td>${row.building_name}</td>
-        <td>${row.type === 'complaint' ? '📝' : '💡'} ${row.type}</td>
-        <td><span class="badge">${row.status}</span></td>
-        <td><button onclick="updateStatus('${row.id}')">تحديث</button></td>
-      </tr>
-    `).join('');
+    const f = e.target;
+    const {error} = await db.from('mec_reports').insert({
+      id: crypto.randomUUID(), college_id:f.college_id.value, building_name:f.building.value,
+      service:f.service.value, root_cause:f.root_cause.value, details:f.details.value,
+      type:f.type.value, status:'New', priority:'Low'
+    });
+    alert(error ? '❌ '+error.message : '✅ تم الإرسال');
+    if(!error){ f.reset(); load(); }
   };
 
-  // 4. تحديث الحالة
-  window.updateStatus = async (id) => {
-    const newStatus = prompt('أدخل الحالة الجديدة (New, In Progress, Resolved):');
-    if (!['New', 'In Progress', 'Resolved'].includes(newStatus)) return alert('حالة غير صحيحة');
-    
-    const { error } = await db.from('mec_reports').update({ status: newStatus }).eq('id', id);
-    if (error) return alert('❌ ' + error.message);
-    loadDashboard();
+  document.getElementById('loginForm').onsubmit = e => {
+    e.preventDefault();
+    if(ADMINS[document.getElementById('aid').value] === document.getElementById('pin').value){
+      document.getElementById('sec-admin-login').classList.add('hidden');
+      document.getElementById('sec-admin').classList.remove('hidden');
+      load();
+    } else alert('❌ بيانات خاطئة');
+  };
+
+  window.load = async () => {
+    const {data,error} = await db.from('mec_reports').select('*').order('created_at',{ascending:false});
+    if(error) return console.error(error);
+    document.getElementById('tot').textContent = data.length;
+    document.getElementById('res').textContent = data.filter(r=>r.status==='Resolved').length;
+    document.getElementById('pen').textContent = data.filter(r=>r.status!=='Resolved').length;
+    document.getElementById('sug').textContent = data.filter(r=>r.type==='suggestion').length;
+    document.getElementById('tbl').innerHTML = data.length ? data.map(r=>`
+      <tr><td>${r.id.slice(0,8)}</td><td>${r.college_id}</td><td>${r.building_name}</td>
+      <td>${r.type==='complaint'?'📝':'💡'}</td><td>${r.status}</td>
+      <td><button onclick="upd('${r.id}')">تحديث</button></td></tr>`).join('') : '<tr><td colspan="6">فارغ</td></tr>';
+  };
+
+  window.upd = async id => {
+    const s = prompt('الحالة الجديدة (New, In Progress, Resolved):');
+    if(!['New','In Progress','Resolved'].includes(s)) return alert('غير صحيحة');
+    const {error} = await db.from('mec_reports').update({status:s}).eq('id',id);
+    alert(error?'❌ '+error.message:'✅');
+    load();
   };
 </script>
 </body>
